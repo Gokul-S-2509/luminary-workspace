@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminary — Your Personal Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=Syne:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+/* ═══════════════════════════════════════
+   LUMINARY LANDING PAGE
+   Aesthetic: Editorial luxury dark — 
+   cinematic depth, typographic drama
+═══════════════════════════════════════ */
+
+:root {
+  --bg:       #080810;
+  --bg2:      #0e0e1a;
+  --bg3:      #141422;
+  --border:   rgba(255,255,255,0.06);
+  --border2:  rgba(255,255,255,0.12);
+  --text:     #f2f0ec;
+  --text2:    #8a889a;
+  --text3:    #44435a;
+  --accent:   #7c6af5;
+  --accent2:  #a399ff;
+  --amber:    #e8b84b;
+  --green:    #4ec98a;
+  --red:      #e86060;
+  --blue:     #4a9ee8;
+  --glow-v:   rgba(124,106,245,0.18);
+  --glow-a:   rgba(232,184,75,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cursor {
+  width: 10px; height: 10px;
+  background: var(--accent2);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.08s, width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: screen;
+}
+#cursor-ring {
+  width: 36px; height: 36px;
+  border: 1px solid rgba(163,153,255,0.4);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: transform 0.18s cubic-bezier(0.23,1,0.32,1), width 0.3s, height 0.3s, opacity 0.2s;
+}
+body:hover #cursor { opacity: 1; }
+
+/* ── NOISE OVERLAY ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 10000; opacity: 0.5;
+}
+
+/* ════════════════════════════
+   NAVBAR
+════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 60px;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(8,8,16,0.7);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 18px; letter-spacing: 0.02em;
+  text-decoration: none; color: var(--text);
+}
+.logo-mark {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, #7c6af5, #c26aff);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; color: #fff;
+  box-shadow: 0 4px 16px rgba(124,106,245,0.4);
+}
+.nav-links {
+  display: flex; align-items: center; gap: 6px;
+}
+.nav-link {
+  color: var(--text2); text-decoration: none;
+  font-size: 13px; font-weight: 500; padding: 7px 14px;
+  border-radius: 8px; transition: all 0.2s;
+}
+.nav-link:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+.nav-cta {
+  background: linear-gradient(135deg, #7c6af5, #a366f5);
+  color: #fff; text-decoration: none;
+  font-size: 13px; font-weight: 700;
+  padding: 9px 22px; border-radius: 9px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(124,106,245,0.3);
+  letter-spacing: 0.02em;
+}
+.nav-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(124,106,245,0.45);
+}
+
+/* ════════════════════════════
+   HERO
+════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  padding: 120px 40px 80px;
+  text-align: center;
+}
+
+/* Animated mesh background */
+.hero-mesh {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(124,106,245,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 70%, rgba(194,106,255,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(232,184,75,0.04) 0%, transparent 70%);
+  animation: meshFloat 8s ease-in-out infinite alternate;
+}
+@keyframes meshFloat {
+  from { transform: scale(1) translateY(0); }
+  to   { transform: scale(1.04) translateY(-10px); }
+}
+
+/* Floating orbs */
+.orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(80px); pointer-events: none;
+  animation: orbDrift linear infinite;
+}
+.orb-1 { width: 500px; height: 500px; background: rgba(124,106,245,0.07); top: -100px; left: -150px; animation-duration: 20s; }
+.orb-2 { width: 400px; height: 400px; background: rgba(194,106,255,0.06); bottom: -50px; right: -100px; animation-duration: 25s; animation-direction: reverse; }
+.orb-3 { width: 200px; height: 200px; background: rgba(232,184,75,0.06); top: 40%; left: 60%; animation-duration: 15s; }
+@keyframes orbDrift {
+  0%   { transform: translate(0,0) scale(1); }
+  33%  { transform: translate(30px,-20px) scale(1.05); }
+  66%  { transform: translate(-20px,30px) scale(0.95); }
+  100% { transform: translate(0,0) scale(1); }
+}
+
+/* Grid lines */
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 100%);
+}
+
+.hero-content {
+  position: relative; z-index: 2;
+  max-width: 840px;
+  animation: heroReveal 1s cubic-bezier(0.23,1,0.32,1) both;
+}
+@keyframes heroReveal {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(124,106,245,0.1);
+  border: 1px solid rgba(124,106,245,0.25);
+  padding: 6px 16px; border-radius: 20px;
+  font-size: 12px; font-weight: 700;
+  color: var(--accent2); letter-spacing: 0.08em;
+  text-transform: uppercase; margin-bottom: 32px;
+  animation: heroReveal 1s 0.1s cubic-bezier(0.23,1,0.32,1) both;
+}
+.badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent2);
+  box-shadow: 0 0 8px var(--accent);
+  animation: badgePulse 2s ease infinite;
+}
+@keyframes badgePulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+.hero-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(52px, 8vw, 96px);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin-bottom: 28px;
+  animation: heroReveal 1s 0.2s cubic-bezier(0.23,1,0.32,1) both;
+}
+.hero-title em {
+  font-style: italic;
+  background: linear-gradient(135deg, #a399ff, #e080ff, #e8b84b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-title .line2 {
+  display: block;
+  color: rgba(242,240,236,0.35);
+  font-weight: 300;
+  font-style: italic;
+}
+
+.hero-sub {
+  font-size: 18px; line-height: 1.65;
+  color: var(--text2); max-width: 520px;
+  margin: 0 auto 44px;
+  font-weight: 400;
+  animation: heroReveal 1s 0.3s cubic-bezier(0.23,1,0.32,1) both;
+}
+
+.hero-actions {
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px; flex-wrap: wrap;
+  animation: heroReveal 1s 0.4s cubic-bezier(0.23,1,0.32,1) both;
+}
+.btn-hero-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, #7c6af5, #a366f5);
+  color: #fff; text-decoration: none;
+  font-size: 15px; font-weight: 700;
+  padding: 16px 36px; border-radius: 12px;
+  border: none; cursor: none;
+  transition: all 0.25s;
+  box-shadow: 0 8px 32px rgba(124,106,245,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+  letter-spacing: 0.01em;
+  font-family: 'Syne', sans-serif;
+}
+.btn-hero-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(124,106,245,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-hero-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border2);
+  color: var(--text2); text-decoration: none;
+  font-size: 15px; font-weight: 600;
+  padding: 15px 28px; border-radius: 12px;
+  transition: all 0.2s; cursor: none;
+  font-family: 'Syne', sans-serif;
+}
+.btn-hero-secondary:hover { border-color: var(--border2); color: var(--text); background: rgba(255,255,255,0.07); }
+
+.hero-note {
+  margin-top: 20px; font-size: 12px; color: var(--text3);
+  animation: heroReveal 1s 0.5s cubic-bezier(0.23,1,0.32,1) both;
+}
+.hero-note span { color: var(--text2); }
+
+/* ── HERO PREVIEW WINDOW ── */
+.hero-preview {
+  position: relative; max-width: 900px; margin: 60px auto 0;
+  animation: heroReveal 1s 0.55s cubic-bezier(0.23,1,0.32,1) both;
+}
+.preview-chrome {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04);
+}
+.preview-bar {
+  height: 40px; background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 16px; gap: 8px;
+}
+.pbar-dot { width: 10px; height: 10px; border-radius: 50%; }
+.pd-r { background: #ff5f56; }
+.pd-y { background: #ffbd2e; }
+.pd-g { background: #27c93f; }
+.pbar-url {
+  flex: 1; max-width: 280px; margin: 0 auto;
+  background: rgba(255,255,255,0.05); border-radius: 6px;
+  height: 24px; display: flex; align-items: center;
+  padding: 0 10px; gap: 6px; font-size: 11px; color: var(--text3);
+}
+.preview-body {
+  display: flex; height: 340px;
+}
+.preview-sidebar {
+  width: 180px; background: rgba(255,255,255,0.02);
+  border-right: 1px solid var(--border);
+  padding: 14px 10px; flex-shrink: 0;
+}
+.psb-logo {
+  display: flex; align-items: center; gap: 7px;
+  margin-bottom: 14px; padding: 0 4px;
+}
+.psb-logo-mark {
+  width: 22px; height: 22px;
+  background: linear-gradient(135deg, #7c6af5, #c26aff);
+  border-radius: 5px; font-size: 11px;
+  display: flex; align-items: center; justify-content: center; color: #fff;
+}
+.psb-name { font-size: 11px; font-weight: 700; color: rgba(242,240,236,0.5); }
+.psb-item {
+  display: flex; align-items: center; gap: 7px;
+  padding: 5px 8px; border-radius: 5px;
+  font-size: 11px; color: rgba(242,240,236,0.3);
+  margin-bottom: 2px;
+}
+.psb-item.active { background: rgba(124,106,245,0.12); color: rgba(163,153,255,0.8); }
+.psb-item i { font-size: 10px; opacity: 0.6; }
+.preview-main {
+  flex: 1; padding: 20px 28px; overflow: hidden;
+}
+.pmain-cover {
+  height: 60px; border-radius: 8px; margin-bottom: 14px;
+  background: linear-gradient(135deg, #0e0e18, #18102e, #0c0c18);
+  position: relative; overflow: hidden;
+}
+.pmain-cover::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(124,106,245,0.3) 0%, transparent 70%);
+}
+.pmain-icon { font-size: 24px; margin-bottom: 4px; }
+.pmain-title {
+  font-family: 'Fraunces', serif;
+  font-size: 20px; font-weight: 700;
+  color: rgba(242,240,236,0.8); margin-bottom: 12px;
+}
+.pmain-line {
+  height: 8px; border-radius: 4px;
+  background: rgba(255,255,255,0.06);
+  margin-bottom: 7px;
+}
+.pmain-line.w80 { width: 80%; }
+.pmain-line.w60 { width: 60%; }
+.pmain-line.w70 { width: 70%; }
+.pmain-line.w45 { width: 45%; }
+.pmain-line.accent { background: rgba(124,106,245,0.15); height: 28px; border-radius: 6px; border-left: 3px solid rgba(124,106,245,0.5); }
+
+/* Shimmer on preview */
+.preview-chrome::before {
+  content: '';
+  position: absolute; top: 0; left: -100%;
+  width: 40%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.018), transparent);
+  animation: shimmer 4s ease-in-out infinite;
+  z-index: 1; pointer-events: none;
+}
+@keyframes shimmer { 0%{left:-40%} 100%{left:140%} }
+
+/* glow below preview */
+.preview-glow {
+  position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%);
+  width: 60%; height: 80px;
+  background: var(--glow-v);
+  filter: blur(40px); border-radius: 50%;
+}
+
+/* ════════════════════════════
+   SOCIAL PROOF
+════════════════════════════ */
+.social-strip {
+  padding: 28px 60px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  gap: 40px; flex-wrap: wrap;
+  background: rgba(255,255,255,0.015);
+}
+.social-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--text3); font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.social-num {
+  font-family: 'Fraunces', serif;
+  font-size: 22px; font-weight: 700;
+  color: var(--text); margin-right: 4px;
+}
+
+/* ════════════════════════════
+   FEATURES
+════════════════════════════ */
+#features {
+  padding: 120px 60px;
+  max-width: 1200px; margin: 0 auto;
+}
+.section-label {
+  font-size: 11px; font-weight: 700;
+  color: var(--accent); text-transform: uppercase;
+  letter-spacing: 0.12em; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-label::before {
+  content: ''; width: 20px; height: 1px;
+  background: var(--accent);
+}
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(36px, 5vw, 58px);
+  font-weight: 700; line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--text); margin-bottom: 16px;
+}
+.section-sub {
+  font-size: 17px; color: var(--text2);
+  max-width: 480px; line-height: 1.65;
+  margin-bottom: 64px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.feat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px;
+  transition: all 0.25s;
+  position: relative; overflow: hidden;
+}
+.feat-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(124,106,245,0.3), transparent);
+  opacity: 0; transition: opacity 0.25s;
+}
+.feat-card:hover { border-color: rgba(124,106,245,0.2); transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
+.feat-card:hover::before { opacity: 1; }
+
+.feat-card.large { grid-column: span 2; }
+.feat-card.tall  { grid-row: span 2; }
+
+.feat-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px; margin-bottom: 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  background: var(--bg3); border: 1px solid var(--border);
+}
+.feat-icon.vi { background: rgba(124,106,245,0.1); border-color: rgba(124,106,245,0.2); }
+.feat-icon.va { background: rgba(232,184,75,0.1); border-color: rgba(232,184,75,0.2); }
+.feat-icon.vg { background: rgba(78,201,138,0.1); border-color: rgba(78,201,138,0.2); }
+.feat-icon.vr { background: rgba(232,96,96,0.1); border-color: rgba(232,96,96,0.2); }
+.feat-icon.vb { background: rgba(74,158,232,0.1); border-color: rgba(74,158,232,0.2); }
+
+.feat-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px; font-weight: 700;
+  color: var(--text); margin-bottom: 8px;
+}
+.feat-desc { font-size: 13px; color: var(--text2); line-height: 1.65; }
+
+/* Mini kanban preview inside feature card */
+.mini-kanban { margin-top: 20px; display: flex; gap: 8px; }
+.mini-col { flex: 1; background: var(--bg3); border-radius: 8px; padding: 8px; }
+.mini-col-head {
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 6px; display: flex; align-items: center; gap: 5px;
+}
+.mini-dot { width: 5px; height: 5px; border-radius: 50%; }
+.mini-card {
+  background: var(--bg2); border-radius: 5px;
+  padding: 5px 7px; margin-bottom: 4px;
+  font-size: 10px; color: var(--text2);
+  border: 1px solid var(--border);
+}
+
+/* Feature: database preview */
+.mini-table { margin-top: 20px; border-collapse: collapse; width: 100%; }
+.mini-table th, .mini-table td { padding: 6px 10px; font-size: 10px; border-bottom: 1px solid var(--border); text-align: left; }
+.mini-table th { color: var(--text3); font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; background: var(--bg3); }
+.mini-table td { color: var(--text2); }
+.mini-status {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 9px; padding: 2px 7px; border-radius: 10px; font-weight: 700;
+}
+.ms-todo { background: rgba(80,80,90,0.3); color: var(--text3); }
+.ms-prog { background: rgba(74,158,232,0.12); color: var(--blue); }
+.ms-done { background: rgba(78,201,138,0.12); color: var(--green); }
+
+/* ════════════════════════════
+   HOW IT WORKS
+════════════════════════════ */
+#how {
+  padding: 100px 60px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.how-inner { max-width: 1100px; margin: 0 auto; }
+.steps {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 0;
+  margin-top: 64px; position: relative;
+}
+.steps::before {
+  content: '';
+  position: absolute; top: 28px; left: 16.6%; right: 16.6%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border2), var(--accent), var(--border2), transparent);
+}
+.step {
+  text-align: center; padding: 0 32px;
+  position: relative;
+}
+.step-num {
+  width: 56px; height: 56px;
+  border-radius: 50%; margin: 0 auto 20px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-size: 22px; font-weight: 700;
+  color: var(--accent2);
+  position: relative; z-index: 1;
+  box-shadow: 0 0 0 6px var(--bg2);
+  transition: all 0.25s;
+}
+.step:hover .step-num {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 0 6px var(--bg2), 0 0 30px rgba(124,106,245,0.3);
+}
+.step-icon { font-size: 28px; margin-bottom: 14px; }
+.step-title {
+  font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700;
+  color: var(--text); margin-bottom: 8px;
+}
+.step-desc { font-size: 13px; color: var(--text2); line-height: 1.65; }
+
+/* ════════════════════════════
+   PRICING (comparison)
+════════════════════════════ */
+#pricing {
+  padding: 120px 60px;
+  max-width: 1100px; margin: 0 auto;
+}
+.compare-table {
+  width: 100%; border-collapse: collapse;
+  margin-top: 64px;
+  border-radius: 16px; overflow: hidden;
+  border: 1px solid var(--border);
+}
+.compare-table th {
+  padding: 20px 24px; text-align: left;
+  background: var(--bg2);
+  font-size: 13px; font-weight: 700; color: var(--text2);
+  border-bottom: 1px solid var(--border2);
+}
+.compare-table th:nth-child(2) { color: var(--text3); font-size: 12px; }
+.compare-table th:nth-child(3) { color: var(--text3); font-size: 12px; }
+.compare-table th.highlight {
+  background: rgba(124,106,245,0.1);
+  color: var(--accent2);
+  border-bottom-color: rgba(124,106,245,0.2);
+}
+.compare-table td {
+  padding: 14px 24px; border-bottom: 1px solid var(--border);
+  font-size: 13px; color: var(--text2);
+}
+.compare-table td.highlight { background: rgba(124,106,245,0.04); }
+.compare-table td:first-child { color: var(--text); font-weight: 500; }
+.compare-table tr:last-child td { border-bottom: none; }
+.check { color: var(--green); font-size: 14px; }
+.cross { color: var(--text3); font-size: 13px; }
+.pill {
+  display: inline-flex; align-items: center;
+  background: rgba(78,201,138,0.1); color: var(--green);
+  border: 1px solid rgba(78,201,138,0.2);
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 700;
+}
+.price-tag {
+  font-family: 'Fraunces', serif;
+  font-size: 26px; font-weight: 700; color: var(--text);
+}
+.price-sub { font-size: 11px; color: var(--text3); display: block; }
+
+/* ════════════════════════════
+   TESTIMONIALS
+════════════════════════════ */
+#testimonials {
+  padding: 100px 60px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.testi-inner { max-width: 1100px; margin: 0 auto; }
+.testi-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 16px;
+  margin-top: 56px;
+}
+.testi-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px;
+  transition: border-color 0.2s;
+}
+.testi-card:hover { border-color: var(--border2); }
+.testi-stars { color: var(--amber); font-size: 12px; margin-bottom: 14px; letter-spacing: 2px; }
+.testi-quote {
+  font-size: 14px; line-height: 1.7;
+  color: var(--text2); margin-bottom: 18px;
+  font-style: italic;
+}
+.testi-author { display: flex; align-items: center; gap: 10px; }
+.testi-av {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; background: var(--bg4);
+  border: 1px solid var(--border);
+}
+.testi-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.testi-role { font-size: 11px; color: var(--text3); }
+
+/* ════════════════════════════
+   CTA SECTION
+════════════════════════════ */
+#cta {
+  padding: 140px 60px;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.cta-glow {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 600px; height: 300px;
+  background: radial-gradient(ellipse, rgba(124,106,245,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-content { position: relative; z-index: 2; max-width: 640px; margin: 0 auto; }
+.cta-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 900; line-height: 1.0;
+  letter-spacing: -0.03em; margin-bottom: 20px;
+  color: var(--text);
+}
+.cta-title em {
+  font-style: italic;
+  background: linear-gradient(135deg, #a399ff, #e080ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.cta-sub { font-size: 16px; color: var(--text2); margin-bottom: 40px; line-height: 1.6; }
+
+/* ════════════════════════════
+   FOOTER
+════════════════════════════ */
+footer {
+  padding: 40px 60px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-logo { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--text); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { color: var(--text3); font-size: 12px; text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--text2); }
+.footer-copy { font-size: 12px; color: var(--text3); }
+
+/* ════════════════════════════
+   SCROLL ANIMATIONS
+════════════════════════════ */
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.23,1,0.32,1), transform 0.7s cubic-bezier(0.23,1,0.32,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ════════════════════════════
+   SCROLLBAR
+════════════════════════════ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(124,106,245,0.3); border-radius: 3px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  nav { padding: 0 24px; }
+  nav .nav-links { display: none; }
+  #hero { padding: 100px 24px 60px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .feat-card.large { grid-column: span 1; }
+  .steps { grid-template-columns: 1fr; }
+  .steps::before { display: none; }
+  .testi-grid { grid-template-columns: 1fr; }
+  .social-strip { padding: 20px 24px; gap: 20px; }
+  #features, #pricing, #cta { padding: 80px 24px; }
+  footer { padding: 30px 24px; }
+}
+  </style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="logo-mark">✦</div>
+    Luminary
+  </a>
+  <div class="nav-links">
+    <a href="#features" class="nav-link">Features</a>
+    <a href="#how" class="nav-link">How it works</a>
+    <a href="#pricing" class="nav-link">Compare</a>
+    <a href="#testimonials" class="nav-link">Reviews</a>
+  </div>
+  <a href="workspace.html" class="nav-cta">Open Workspace →</a>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-mesh"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="badge-dot"></div>
+      Free &amp; Open Forever
+    </div>
+
+    <h1 class="hero-title">
+      Your workspace,<br>
+      <em>completely yours.</em>
+      <span class="line2">No subscriptions. No limits.</span>
+    </h1>
+
+    <p class="hero-sub">
+      Luminary is your personal Notion alternative — rich notes, kanban boards, databases, and calendars. All offline, all private, all free.
+    </p>
+
+    <div class="hero-actions">
+      <a href="workspace.html" class="btn-hero-primary">
+        ✦ Open My Workspace
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#features" class="btn-hero-secondary">
+        See features
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <p class="hero-note">No account needed. <span>Runs entirely in your browser.</span></p>
+
+    <!-- PREVIEW WINDOW -->
+    <div class="hero-preview">
+      <div class="preview-chrome">
+        <div class="preview-bar">
+          <div class="pbar-dot pd-r"></div>
+          <div class="pbar-dot pd-y"></div>
+          <div class="pbar-dot pd-g"></div>
+          <div class="pbar-url">
+            <svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M8 1a7 7 0 100 14A7 7 0 008 1z" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/></svg>
+            luminary.app/workspace
+          </div>
+        </div>
+        <div class="preview-body">
+          <div class="preview-sidebar">
+            <div class="psb-logo">
+              <div class="psb-logo-mark">✦</div>
+              <div class="psb-name">Luminary</div>
+            </div>
+            <div class="psb-item active"><i class="fa fa-home"></i> Home</div>
+            <div class="psb-item"><i class="fa fa-columns"></i> Board</div>
+            <div class="psb-item"><i class="fa fa-table"></i> Database</div>
+            <div class="psb-item"><i class="fa fa-calendar"></i> Calendar</div>
+            <div style="height:12px;border-top:1px solid rgba(255,255,255,0.05);margin:10px 0 8px"></div>
+            <div class="psb-item"><span style="font-size:12px">🏠</span> Welcome</div>
+            <div class="psb-item"><span style="font-size:12px">💡</span> Ideas</div>
+            <div class="psb-item"><span style="font-size:12px">📔</span> Journal</div>
+          </div>
+          <div class="preview-main">
+            <div class="pmain-cover"></div>
+            <div class="pmain-icon">💡</div>
+            <div class="pmain-title">Ideas & Goals</div>
+            <div class="pmain-line w80"></div>
+            <div class="pmain-line w60"></div>
+            <div class="pmain-line accent" style="margin:12px 0"></div>
+            <div class="pmain-line w70"></div>
+            <div class="pmain-line w45"></div>
+          </div>
+        </div>
+      </div>
+      <div class="preview-glow"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<div class="social-strip reveal">
+  <div class="social-item"><span class="social-num">100%</span> Free Forever</div>
+  <div style="width:1px;height:30px;background:rgba(255,255,255,0.06)"></div>
+  <div class="social-item"><span class="social-num">0</span> Data sent to servers</div>
+  <div style="width:1px;height:30px;background:rgba(255,255,255,0.06)"></div>
+  <div class="social-item"><span class="social-num">∞</span> Pages & Tasks</div>
+  <div style="width:1px;height:30px;background:rgba(255,255,255,0.06)"></div>
+  <div class="social-item"><span class="social-num">1</span> File. No install needed.</div>
+</div>
+
+<!-- ══ FEATURES ══ -->
+<section id="features">
+  <div class="section-label reveal">Everything you need</div>
+  <h2 class="section-title reveal reveal-delay-1">Built for deep work.<br>Not for enterprise.</h2>
+  <p class="section-sub reveal reveal-delay-2">Every premium feature from the tools you pay for — rebuilt for your personal use, stored locally, owned entirely by you.</p>
+
+  <div class="features-grid">
+    <!-- Rich Editor -->
+    <div class="feat-card reveal">
+      <div class="feat-icon vi">📝</div>
+      <div class="feat-title">Rich Block Editor</div>
+      <div class="feat-desc">Headings, quotes, code blocks, tables, bullet lists — all with a <code style="font-family:'Fira Code',monospace;font-size:12px;background:rgba(255,255,255,0.06);padding:1px 5px;border-radius:3px">/</code> command menu. Floating toolbar for quick formatting.</div>
+    </div>
+
+    <!-- Kanban -->
+    <div class="feat-card large reveal reveal-delay-1">
+      <div class="feat-icon va">☷</div>
+      <div class="feat-title">Kanban Board</div>
+      <div class="feat-desc">Drag cards across To Do, In Progress, Done, and Blocked columns. Manage all your projects visually.</div>
+      <div class="mini-kanban">
+        <div class="mini-col">
+          <div class="mini-col-head"><div class="mini-dot" style="background:#55545d"></div>To Do</div>
+          <div class="mini-card">Design mockup</div>
+          <div class="mini-card">Write docs</div>
+        </div>
+        <div class="mini-col">
+          <div class="mini-col-head"><div class="mini-dot" style="background:#4a9ee8"></div>In Progress</div>
+          <div class="mini-card">Build editor</div>
+        </div>
+        <div class="mini-col">
+          <div class="mini-col-head"><div class="mini-dot" style="background:#4ec98a"></div>Done</div>
+          <div class="mini-card">Landing page</div>
+          <div class="mini-card">Setup project</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Database -->
+    <div class="feat-card large reveal reveal-delay-2">
+      <div class="feat-icon vg">⊟</div>
+      <div class="feat-title">Database Table View</div>
+      <div class="feat-desc">Spreadsheet-style view of all your tasks with status badges, priority labels, and due dates.</div>
+      <table class="mini-table">
+        <thead><tr><th>Task</th><th>Status</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td>Build MVP</td><td><span class="mini-status ms-prog">In Progress</span></td><td>High</td></tr>
+          <tr><td>Write tests</td><td><span class="mini-status ms-todo">To Do</span></td><td>Med</td></tr>
+          <tr><td>Deploy</td><td><span class="mini-status ms-done">Done</span></td><td>Low</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Calendar -->
+    <div class="feat-card reveal reveal-delay-1">
+      <div class="feat-icon vb">📅</div>
+      <div class="feat-title">Calendar View</div>
+      <div class="feat-desc">See all tasks pinned to their due dates on a monthly calendar. Click any day to add a task instantly.</div>
+    </div>
+
+    <!-- Covers -->
+    <div class="feat-card reveal reveal-delay-2">
+      <div class="feat-icon va">🖼</div>
+      <div class="feat-title">Custom Page Covers</div>
+      <div class="feat-desc">Each page gets its own cover — choose from gradients, solid colors, upload an image, or paste a URL. Stored per-page.</div>
+    </div>
+
+    <!-- Export / Import -->
+    <div class="feat-card reveal">
+      <div class="feat-icon vg">💾</div>
+      <div class="feat-title">Export & Import Backup</div>
+      <div class="feat-desc">Export your entire workspace as a <code style="font-family:'Fira Code',monospace;font-size:12px;background:rgba(255,255,255,0.06);padding:1px 5px;border-radius:3px">.lmn</code> database file. Import it back on any device, anytime.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HOW IT WORKS ══ -->
+<section id="how">
+  <div class="how-inner">
+    <div class="section-label reveal">Simple by design</div>
+    <h2 class="section-title reveal reveal-delay-1">Up in seconds.<br>Productive in minutes.</h2>
+
+    <div class="steps">
+      <div class="step reveal reveal-delay-1">
+        <div class="step-num">1</div>
+        <div class="step-icon">🚀</div>
+        <div class="step-title">Open the workspace</div>
+        <div class="step-desc">Just open the HTML file in any browser. No install, no account, no server. It works instantly.</div>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-num">2</div>
+        <div class="step-icon">✍️</div>
+        <div class="step-title">Create pages & tasks</div>
+        <div class="step-desc">Write notes, create pages from templates, add tasks to your board, all in one place.</div>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <div class="step-num">3</div>
+        <div class="step-icon">💾</div>
+        <div class="step-title">Back it up, done</div>
+        <div class="step-desc">Export a <code style="font-family:'Fira Code',monospace;font-size:11px">.lmn</code> backup anytime. Import it on any device to restore everything perfectly.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COMPARE ══ -->
+<section id="pricing">
+  <div class="section-label reveal">Why Luminary</div>
+  <h2 class="section-title reveal reveal-delay-1">Stop paying.<br>Start owning.</h2>
+  <p class="section-sub reveal reveal-delay-2">Everything the paid plans offer. None of the monthly cost.</p>
+
+  <table class="compare-table reveal">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Notion Free</th>
+        <th>Notion Pro ($16/mo)</th>
+        <th class="highlight">✦ Luminary</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Unlimited pages</td>
+        <td><span class="cross">✗ Limited</span></td>
+        <td><span class="check">✓</span></td>
+        <td class="highlight"><span class="check">✓ Always</span></td>
+      </tr>
+      <tr>
+        <td>Kanban board</td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="check">✓</span></td>
+        <td class="highlight"><span class="check">✓</span></td>
+      </tr>
+      <tr>
+        <td>Database / Table view</td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="check">✓</span></td>
+        <td class="highlight"><span class="check">✓</span></td>
+      </tr>
+      <tr>
+        <td>Custom page covers</td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="check">✓</span></td>
+        <td class="highlight"><span class="check">✓ + Image upload</span></td>
+      </tr>
+      <tr>
+        <td>Export backup</td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="check">✓</span></td>
+        <td class="highlight"><span class="check">✓ .lmn format</span></td>
+      </tr>
+      <tr>
+        <td>Calendar view</td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="check">✓</span></td>
+        <td class="highlight"><span class="check">✓</span></td>
+      </tr>
+      <tr>
+        <td>Privacy / data ownership</td>
+        <td><span class="cross">Cloud-only</span></td>
+        <td><span class="cross">Cloud-only</span></td>
+        <td class="highlight"><span class="check">✓ 100% local</span></td>
+      </tr>
+      <tr>
+        <td>Price</td>
+        <td><span style="color:var(--text2)">$0</span></td>
+        <td><span style="color:var(--red)">$16 / month</span></td>
+        <td class="highlight"><span class="pill">Free forever</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══ TESTIMONIALS ══ -->
+<section id="testimonials">
+  <div class="testi-inner">
+    <div class="section-label reveal">Loved by builders</div>
+    <h2 class="section-title reveal reveal-delay-1">What people are saying</h2>
+
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">"I cancelled my Notion subscription the day I started using Luminary. Everything I needed was already here — and it's faster."</div>
+        <div class="testi-author">
+          <div class="testi-av">👨‍💻</div>
+          <div><div class="testi-name">Arjun M.</div><div class="testi-role">Software Engineer</div></div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">"The fact that it runs fully in the browser with zero setup is incredible. My notes are private and I don't have to trust a cloud service."</div>
+        <div class="testi-author">
+          <div class="testi-av">👩‍🎨</div>
+          <div><div class="testi-name">Priya S.</div><div class="testi-role">UX Designer</div></div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">"The kanban board and .lmn export/import is genius. I back up every week and I know my data is safe no matter what."</div>
+        <div class="testi-author">
+          <div class="testi-av">🧑‍🎓</div>
+          <div><div class="testi-name">Rahul K.</div><div class="testi-role">CS Student</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section id="cta">
+  <div class="cta-glow"></div>
+  <div class="cta-content reveal">
+    <h2 class="cta-title">Ready to own<br><em>your workspace?</em></h2>
+    <p class="cta-sub">No account. No subscription. No compromise. Just open it and start building your second brain.</p>
+    <a href="workspace.html" class="btn-hero-primary" style="font-size:16px;padding:18px 44px;">
+      ✦ Launch Luminary
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <p class="hero-note" style="margin-top:20px">Your data never leaves your device.</p>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-logo">
+    <div class="logo-mark" style="width:26px;height:26px;font-size:13px;border-radius:7px">✦</div>
+    Luminary
+  </div>
+  <div class="footer-links">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="#pricing">Compare</a>
+    <a href="workspace.html">Open Workspace</a>
+  </div>
+  <div class="footer-copy">Built with ♥ · Free forever</div>
+</footer>
+
+<script>
+// ── CUSTOM CURSOR ──
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = mx + 'px';
+  cur.style.top = my + 'px';
+});
+
+function animateRing() {
+  rx += (mx - rx) * 0.14;
+  ry += (my - ry) * 0.14;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+// Scale cursor on interactive elements
+document.querySelectorAll('a, button, .feat-card, .testi-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cur.style.width = '18px'; cur.style.height = '18px';
+    ring.style.width = '52px'; ring.style.height = '52px';
+    ring.style.opacity = '0.5';
+  });
+  el.addEventListener('mouseleave', () => {
+    cur.style.width = '10px'; cur.style.height = '10px';
+    ring.style.width = '36px'; ring.style.height = '36px';
+    ring.style.opacity = '1';
+  });
+});
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── NAVBAR SCROLL EFFECT ──
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  nav.style.background = window.scrollY > 60
+    ? 'rgba(8,8,16,0.95)'
+    : 'rgba(8,8,16,0.7)';
+});
+
+// ── SMOOTH ANCHOR SCROLL ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+
+// ── COUNTER ANIMATION ──
+function animateCount(el, target, suffix='') {
+  let start = 0;
+  const step = target / 50;
+  const timer = setInterval(() => {
+    start = Math.min(start + step, target);
+    el.textContent = Math.round(start) + suffix;
+    if (start >= target) clearInterval(timer);
+  }, 30);
+}
+</script>
+</body>
+</html>

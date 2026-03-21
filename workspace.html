@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminary ✦ Your Personal Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&family=Syne:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css\\style.css" />
+</head>
+<body>
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="ws-logo"><span>✦</span></div>
+      <div class="ws-info">
+        <div class="ws-name">Luminary</div>
+        <div class="ws-badge">Unlimited</div>
+      </div>
+      <button class="icon-btn" id="collapse-btn" onclick="toggleSidebar()" title="Collapse"><i class="fa fa-sidebar"></i>☰</button>
+    </div>
+
+    <div class="sidebar-search">
+      <i class="fa fa-search"></i>
+      <input type="text" id="search-input" placeholder="Search  (Ctrl+K)" oninput="filterPages(this.value)" />
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-label">Views</div>
+      <div class="nav-item" onclick="openView('kanban')"><i class="fa fa-columns"></i><span>Board</span></div>
+      <div class="nav-item" onclick="openView('table')"><i class="fa fa-table"></i><span>Database</span></div>
+      <div class="nav-item" onclick="openView('calendar')"><i class="fa fa-calendar-alt"></i><span>Calendar</span></div>
+    </nav>
+
+    <div class="sidebar-pages">
+      <div class="nav-label">
+        Pages
+        <button class="inline-btn" onclick="createNewPage()" title="New page"><i class="fa fa-plus"></i></button>
+      </div>
+      <div id="pages-list"></div>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="import-btn" onclick="triggerImport()">
+        <i class="fa fa-file-import"></i> Import Backup
+      </button>
+      <input type="file" id="import-file" accept=".lmn" style="display:none" onchange="importData(event)" />
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <main id="main">
+
+    <!-- TOPBAR -->
+    <header id="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+        <button class="icon-btn" onclick="goBack()"><i class="fa fa-chevron-left"></i></button>
+        <button class="icon-btn" onclick="goForward()"><i class="fa fa-chevron-right"></i></button>
+        <div class="breadcrumb">
+          <span class="bc-root">Luminary</span>
+          <i class="fa fa-chevron-right bc-sep"></i>
+          <span id="bc-current">Home</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="tb-action" id="fav-btn" onclick="toggleFavorite()"><i class="fa fa-star"></i></button>
+        <button class="tb-action" onclick="exportData()"><i class="fa fa-download"></i> Export</button>
+        <button class="tb-action" onclick="printPage()"><i class="fa fa-print"></i> Print / PDF</button>
+        <button class="tb-action" id="shortcuts-toggle" onclick="toggleShortcuts()"><i class="fa fa-keyboard"></i></button>
+        <button class="tb-action" onclick="showModal('settings-modal')"><i class="fa fa-cog"></i></button>
+      </div>
+    </header>
+
+    <!-- EDITOR VIEW -->
+    <div id="content">
+      <!-- COVER -->
+      <div class="page-cover" id="page-cover">
+        <div class="cover-overlay"></div>
+        <div class="cover-controls">
+          <button onclick="showCoverPicker()"><i class="fa fa-image"></i> Change Cover</button>
+          <button onclick="removeCover()"><i class="fa fa-times"></i> Remove</button>
+        </div>
+      </div>
+
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <div class="page-icon" id="page-icon" onclick="showEmojiPicker(event)">📝</div>
+        <div class="page-header-actions">
+          <button class="ghost-btn" onclick="showCoverPicker()"><i class="fa fa-image"></i> Add Cover</button>
+          <button class="ghost-btn" onclick="showModal('task-modal')"><i class="fa fa-plus"></i> Add Property</button>
+        </div>
+        <textarea id="page-title" rows="1" placeholder="Untitled" oninput="onTitleInput(this)" onkeydown="titleKeydown(event)"></textarea>
+        <div class="page-meta" id="page-meta">
+          <div class="meta-chip"><i class="fa fa-calendar"></i><span id="meta-created">—</span></div>
+          <div class="meta-chip"><i class="fa fa-clock"></i><span id="meta-modified">just now</span></div>
+          <div class="meta-chip" id="meta-words"><i class="fa fa-align-left"></i><span id="word-count">0</span> words</div>
+        </div>
+      </div>
+
+      <!-- EDITOR -->
+      <div class="editor-wrap">
+        <div id="editor" contenteditable="true" spellcheck="true" data-placeholder="Type '/' for commands, or just start writing…"></div>
+      </div>
+    </div>
+
+    <!-- VIEW PANEL (Kanban / Table / Calendar) -->
+    <div id="view-panel" style="display:none">
+      <div class="view-header">
+        <div class="view-title-row">
+          <h2 id="view-title">Board</h2>
+          <div class="view-tabs" id="view-tabs"></div>
+        </div>
+        <button class="tb-action" onclick="showModal('task-modal')"><i class="fa fa-plus"></i> Add Task</button>
+      </div>
+      <div id="view-content"></div>
+    </div>
+
+    <!-- STATUS BAR -->
+    <footer id="statusbar">
+      <div class="status-left">
+        <span class="status-dot"></span><span id="save-status">Saved</span>
+      </div>
+      <div class="status-right">
+        <span><i class="fa fa-lock"></i> Local & Encrypted</span>
+        <span><i class="fa fa-clock"></i> <span id="read-time">0 min read</span></span>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ══ FLOATING TOOLBAR ══ -->
+  <div id="float-toolbar">
+    <button class="ft-btn" onclick="fmt('bold')" title="Bold"><b>B</b></button>
+    <button class="ft-btn" onclick="fmt('italic')" title="Italic"><i>I</i></button>
+    <button class="ft-btn" onclick="fmt('underline')" title="Underline"><u>U</u></button>
+    <button class="ft-btn" onclick="fmt('strikeThrough')" title="Strike"><s>S</s></button>
+    <div class="ft-sep"></div>
+    <button class="ft-btn" onclick="fmtBlock('h1')">H1</button>
+    <button class="ft-btn" onclick="fmtBlock('h2')">H2</button>
+    <button class="ft-btn" onclick="fmtBlock('h3')">H3</button>
+    <div class="ft-sep"></div>
+    <button class="ft-btn" onclick="fmt('insertUnorderedList')"><i class="fa fa-list-ul"></i></button>
+    <button class="ft-btn" onclick="fmt('insertOrderedList')"><i class="fa fa-list-ol"></i></button>
+    <button class="ft-btn" onclick="fmtBlock('blockquote')"><i class="fa fa-quote-left"></i></button>
+    <button class="ft-btn" onclick="insertCode()"><i class="fa fa-code"></i></button>
+    <div class="ft-sep"></div>
+    <button class="ft-btn" onclick="promptLink()"><i class="fa fa-link"></i></button>
+    <button class="ft-btn" onclick="cycleColor()"><i class="fa fa-palette"></i></button>
+  </div>
+
+  <!-- ══ SLASH MENU ══ -->
+  <div id="slash-menu"></div>
+
+  <!-- ══ EMOJI PICKER ══ -->
+  <div id="emoji-picker">
+    <div class="ep-title">Choose Icon</div>
+    <div class="emoji-grid" id="emoji-grid"></div>
+  </div>
+
+  <!-- ══ COVER PICKER ══ -->
+  <div id="cover-picker" class="modal-overlay">
+    <div class="modal cover-modal">
+      <div class="modal-title"><i class="fa fa-image"></i> Page Cover</div>
+      <div class="cover-tabs">
+        <button class="cover-tab active" onclick="switchCoverTab('gradients', this)">Gradients</button>
+        <button class="cover-tab" onclick="switchCoverTab('colors', this)">Colors</button>
+        <button class="cover-tab" onclick="switchCoverTab('upload', this)">Upload Image</button>
+        <button class="cover-tab" onclick="switchCoverTab('url', this)">Image URL</button>
+      </div>
+      <div id="cover-tab-content"></div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('cover-picker')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SHORTCUTS PANEL ══ -->
+  <div id="shortcuts-panel">
+    <div class="sp-header">
+      <span><i class="fa fa-keyboard"></i> Shortcuts</span>
+      <button onclick="closeShortcuts()"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="sp-list">
+      <div class="sp-row"><div class="sp-keys"><kbd>Ctrl</kbd><kbd>S</kbd></div><span>Save page</span></div>
+      <div class="sp-row"><div class="sp-keys"><kbd>Ctrl</kbd><kbd>K</kbd></div><span>Search</span></div>
+      <div class="sp-row"><div class="sp-keys"><kbd>Ctrl</kbd><kbd>N</kbd></div><span>New page</span></div>
+      <div class="sp-row"><div class="sp-keys"><kbd>Ctrl</kbd><kbd>E</kbd></div><span>Export backup</span></div>
+      <div class="sp-row"><div class="sp-keys"><kbd>Ctrl</kbd><kbd>\</kbd></div><span>Toggle sidebar</span></div>
+      <div class="sp-row"><div class="sp-keys"><kbd>/</kbd></div><span>Command menu</span></div>
+      <div class="sp-row"><div class="sp-keys"><kbd>Ctrl</kbd><kbd>B</kbd></div><span>Bold</span></div>
+      <div class="sp-row"><div class="sp-keys"><kbd>Ctrl</kbd><kbd>I</kbd></div><span>Italic</span></div>
+      <div class="sp-row"><div class="sp-keys"><kbd>Esc</kbd></div><span>Close panels</span></div>
+    </div>
+  </div>
+
+  <!-- ══ TOAST ══ -->
+  <div id="toast">
+    <i class="fa fa-check-circle toast-icon"></i>
+    <span id="toast-msg">Saved</span>
+  </div>
+
+  <!-- ══ MODALS ══ -->
+
+  <!-- New Page -->
+  <div class="modal-overlay" id="new-page-modal">
+    <div class="modal">
+      <div class="modal-title">✦ New Page</div>
+      <label>Title</label>
+      <input type="text" id="np-title" placeholder="Page title…" />
+      <label>Icon</label>
+      <input type="text" id="np-icon" placeholder="📝 Emoji icon" />
+      <label>Template</label>
+      <select id="np-template">
+        <option value="blank">Blank</option>
+        <option value="meeting">Meeting Notes</option>
+        <option value="todo">To-do List</option>
+        <option value="journal">Daily Journal</option>
+        <option value="project">Project Plan</option>
+        <option value="braindump">Brain Dump</option>
+      </select>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('new-page-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="confirmNewPage()">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task Modal -->
+  <div class="modal-overlay" id="task-modal">
+    <div class="modal">
+      <div class="modal-title">✅ Add Task</div>
+      <label>Task Name</label>
+      <input type="text" id="task-name" placeholder="What needs to be done?" />
+      <label>Status</label>
+      <select id="task-status">
+        <option value="todo">To Do</option>
+        <option value="progress">In Progress</option>
+        <option value="done">Done</option>
+        <option value="blocked">Blocked</option>
+      </select>
+      <label>Priority</label>
+      <select id="task-priority">
+        <option value="high">High</option>
+        <option value="med">Medium</option>
+        <option value="low">Low</option>
+      </select>
+      <label>Due Date</label>
+      <input type="date" id="task-due" />
+      <label>Notes</label>
+      <textarea id="task-notes" placeholder="Additional notes…"></textarea>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('task-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="confirmTask()">Add Task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share Modal -->
+  <div class="modal-overlay" id="share-modal">
+    <div class="modal">
+      <div class="modal-title">🔗 Share Page</div>
+      <label>Share Link</label>
+      <input type="text" id="share-link" value="https://luminary.app/p/workspace" readonly />
+      <label>Access Level</label>
+      <select>
+        <option>Anyone with link — view only</option>
+        <option>Anyone with link — can edit</option>
+        <option>Private (only me)</option>
+      </select>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('share-modal')">Close</button>
+        <button class="btn btn-primary" onclick="copyShareLink()">Copy Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal">
+      <div class="modal-title">⚙️ Settings</div>
+      <label>Workspace Name</label>
+      <input type="text" id="ws-name-input" value="My Luminary" />
+      <label>Editor Font</label>
+      <select id="font-style-sel" onchange="changeFont(this.value)">
+        <option value="syne">Syne (Default)</option>
+        <option value="serif">Fraunces (Serif)</option>
+        <option value="mono">Fira Code (Mono)</option>
+      </select>
+      <label>Editor Width</label>
+      <select id="fullwidth-sel" onchange="toggleFullWidth(this.value)">
+        <option value="no">Centered</option>
+        <option value="yes">Full Width</option>
+      </select>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('settings-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveSettings()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js\\script.js"></script>
+</body>
+</html>

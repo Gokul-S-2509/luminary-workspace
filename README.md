@@ -11,7 +11,8 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-a399ff.svg)](#contributing)
 
 ---
-
+![Luminary Workspace Preview](https://github.com/Gokul-S-2509/luminary-workspace/blob/main/examples/Luminar-Home.png)
+![Luminary Workspace Preview](https://github.com/Gokul-S-2509/luminary-workspace/blob/main/examples/Luminar-Workspace.png)
 
 </div>
 

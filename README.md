@@ -153,8 +153,6 @@ If you just want one file to carry around:
 
 ### Option 3 — Deploy to Vercel (recommended for online access)
 
-See the [Deploying to Vercel](#deploying-to-vercel) section below.
-
 ---
 
 ## How to Use

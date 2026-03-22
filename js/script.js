@@ -270,8 +270,8 @@ function getTemplate(tpl, title) {
   const d = new Date().toDateString();
   const map = {
     blank: '',
-    meeting: `<h2>${title}</h2><p><strong>Date:</strong> ${d}</p><h3>Agenda</h3><ul><li>Item 1</li><li>Item 2</li></ul><h3>Notes</h3><p></p><h3>Action Items</h3><ul><li>☐ Task</li></ul>`,
-    todo: `<h2>${title}</h2><ul><li>☐ Task 1</li><li>☐ Task 2</li><li>☐ Task 3</li></ul>`,
+    meeting: `<h2>${title}</h2><p><strong>Date:</strong> ${d}</p><h3>Agenda</h3><ul><li>Item 1</li><li>Item 2</li></ul><h3>Notes</h3><p></p><h3>Action Items</h3><ul class="todo-list"><li class="todo-item"><input type="checkbox" class="todo-check" /><span class="todo-text" contenteditable="true">Task</span></li></ul>`,
+    todo: `<h2>${title}</h2><ul class="todo-list"><li class="todo-item"><input type="checkbox" class="todo-check" /><span class="todo-text" contenteditable="true">Task 1</span></li><li class="todo-item"><input type="checkbox" class="todo-check" /><span class="todo-text" contenteditable="true">Task 2</span></li><li class="todo-item"><input type="checkbox" class="todo-check" /><span class="todo-text" contenteditable="true">Task 3</span></li></ul>`,
     journal: `<h2>${title}</h2><p><strong>${d}</strong></p><blockquote>Today's intention…</blockquote><h3>Highlights</h3><p></p><h3>Gratitude</h3><ul><li></li></ul>`,
     project: `<h2>${title}</h2><h3>Overview</h3><p>Describe the project…</p><h3>Goals</h3><ul><li>Goal 1</li></ul><h3>Timeline</h3><p>Start → End</p><h3>Resources</h3><p></p>`,
     braindump: `<h2>${title}</h2><p>Just write. No rules. Dump everything here.</p><p></p>`,
@@ -451,6 +451,23 @@ function setupEditor() {
   editor.addEventListener('keyup', e => {
     if (!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) return;
     showFloatToolbar();
+  });
+
+  // ── TODO CHECKBOX HANDLER ──
+  // Use click on the editor and delegate to .todo-check checkboxes
+  editor.addEventListener('click', e => {
+    const checkbox = e.target.closest('.todo-check');
+    if (!checkbox) return;
+    const textEl = checkbox.closest('.todo-item')?.querySelector('.todo-text');
+    if (!textEl) return;
+    if (checkbox.checked) {
+      textEl.style.textDecoration = 'line-through';
+      textEl.style.opacity = '0.45';
+    } else {
+      textEl.style.textDecoration = 'none';
+      textEl.style.opacity = '1';
+    }
+    scheduleSave();
   });
 }
 
@@ -734,7 +751,7 @@ const SLASH_COMMANDS = [
   { group: 'Lists', items: [
     { icon: '•',    name: 'Bullet List',  desc: 'Unordered list',         cmd: () => fmt('insertUnorderedList') },
     { icon: '1.',   name: 'Numbered',     desc: 'Ordered list',           cmd: () => fmt('insertOrderedList') },
-    { icon: '☑',    name: 'Todo',         desc: 'Checklist items',        cmd: () => insertBlock('<ul><li>☐ Task</li></ul>') },
+    { icon: '☑',    name: 'Todo',         desc: 'Checklist items',        cmd: () => insertBlock('<ul class="todo-list"><li class="todo-item"><input type="checkbox" class="todo-check" /><span class="todo-text" contenteditable="true">To-do item</span></li></ul>') },
   ]},
   { group: 'Media & Code', items: [
     { icon: '</>',  name: 'Code Block',   desc: 'Code snippet',           cmd: () => insertBlock('<pre><code>// your code here</code></pre>') },
@@ -864,21 +881,10 @@ function renderEmojiGrid() {
 function showEmojiPicker(event) {
   const picker = document.getElementById('emoji-picker');
   picker.style.display = 'block';
-
-  const pickerW = picker.offsetWidth || 272;
-  const pickerH = picker.offsetHeight || 320;
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-
-  // On mobile (narrow screens) CSS media query handles centering via bottom:16px,
-  // so skip JS positioning to avoid fighting the CSS transform
-  if (vw <= 600) return;
-
-  // Desktop: position near the tap/click, clamped inside viewport
-  const x = Math.min(Math.max(8, event.clientX), vw - pickerW - 8);
-  const y = Math.min(Math.max(8, event.clientY + 10), vh - pickerH - 8);
+  const x = Math.min(event.clientX, window.innerWidth - 290);
+  const y = Math.min(event.clientY + 10, window.innerHeight - 300);
   picker.style.left = x + 'px';
-  picker.style.top  = y + 'px';
+  picker.style.top = y + 'px';
 }
 function hideEmojiPicker() { document.getElementById('emoji-picker').style.display = 'none'; }
 
